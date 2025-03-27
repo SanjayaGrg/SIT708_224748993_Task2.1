@@ -1,6 +1,8 @@
 package com.example.unitconverterapp;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,11 +14,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Spinner spinnerFrom, spinnerTo;
+    private Spinner category, spinnerFrom, spinnerTo;
     private EditText inputValue;
     private Button convertButton;
     private TextView resultText;
 
+    private String[] cate = {"Length", "Weight", "Temperature"};
     private String[] lengthUnits = {"Inch", "Foot", "Yard", "Mile", "CM", "KM"};
     private String[] weightUnits = {"Pound", "Ounce", "Ton", "KG", "G"};
     private String[] tempUnits = {"Celsius", "Fahrenheit", "Kelvin"};
@@ -27,14 +30,44 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Initialize UI components
+        category = findViewById(R.id.category);
         spinnerFrom = findViewById(R.id.spinnerFrom);
         spinnerTo = findViewById(R.id.spinnerTo);
         inputValue = findViewById(R.id.inputValue);
         convertButton = findViewById(R.id.convertButton);
         resultText = findViewById(R.id.resultText);
 
+        // Set up Category Spinner
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, cate);
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        category.setAdapter(categoryAdapter);
+
         // Default category: Length
         setupSpinners(lengthUnits);
+
+        // Change unit options based on category selection
+        category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0: // Length
+                        setupSpinners(lengthUnits);
+                        break;
+                    case 1: // Weight
+                        setupSpinners(weightUnits);
+                        break;
+                    case 2: // Temperature
+                        setupSpinners(tempUnits);
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Default to Length if nothing is selected
+                setupSpinners(lengthUnits);
+            }
+        });
 
         // Set Click Listener
         convertButton.setOnClickListener(view -> convertUnits());
