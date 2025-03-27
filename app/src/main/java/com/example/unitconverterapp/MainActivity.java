@@ -98,11 +98,13 @@ public class MainActivity extends AppCompatActivity {
         // Prevent converting the same unit
         if (sourceUnit.equals(targetUnit)) {
             resultText.setText("Converted Value: " + value + " " + targetUnit);
+            Toast.makeText(this, "Successfully Converted!", Toast.LENGTH_SHORT).show();
             return;
         }
 
         double convertedValue = performConversion(sourceUnit, targetUnit, value);
         resultText.setText("Converted Value: " + convertedValue + " " + targetUnit);
+        Toast.makeText(this, "Successfully converted!", Toast.LENGTH_SHORT).show();
     }
 
     // Function to perform conversion logic
